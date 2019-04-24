@@ -1,0 +1,40 @@
+- name: install apache
+  yum:
+    name: apache2
+    state: present
+
+– name: Install dependencies for WordPress
+  yum: name={{ item }} state=present
+     with_items:
+      – httpd
+      – mariadb-server
+      – mariadb
+      – php
+      – php-mysql
+      – MySQL-python
+
+- name: Ensure MariaDB is running (and enable it at boot)
+  service: name=mariadb state=started enabled=yes
+
+- name: Create MariaDB database
+  mysql_db: name={{ wp_mysql_db }} state=present
+
+- name: Create MariaDB username and password
+  mysql_user:
+     login_user= root
+     login_password= BOURNE
+     name={{ wp_mysql_user }}
+     password={{ wp_mysql_password }}
+     priv=*.*:ALL
+
+- name: Create directory to download WordPress
+  command: mkdir -p /opt/source/wordpress
+
+- name: Download WordPress
+  get_url: url=https://www.wordpress.org/latest.tar.gz dest=/opt/source/wordpress/wordpress.tar.gz validate_certs=no
+
+– name: Extract WordPress
+  command: “tar xzf /opt/source/wordpress/wordpress.tar.gz -C /var/www/html –strip-components 1”
+
+– name: Send config file
+  copy: src=/root/wp-config-sample.php dest=/var/www/html/wp-config.php mode=0644
