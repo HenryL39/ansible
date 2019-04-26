@@ -1,8 +1,0 @@
-#mysql.yml calls the mysql_install.yml task file to do all necessary tasks to install mysql
-- name: Install mysql
-  hosts: mysql-server
-  become: True
-  become_method: sudo
-  tasks:
-  - name: Install MySQL
-    include: roles/common/tasks/mysql_install.yml
