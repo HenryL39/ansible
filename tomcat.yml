@@ -1,0 +1,8 @@
+#tomcat.yml calls the tomcat_install.yml task file to do all necessary tasks to install tomcat
+- name: Install tomcat
+  hosts: tomcat-server
+  become: True
+  become_method: sudo
+  tasks:
+  - name: Install Tomcat
+    include: roles/common/tasks/tomcat_install.yml

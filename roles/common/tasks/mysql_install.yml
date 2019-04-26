@@ -1,0 +1,13 @@
+#steps : install mysql pacckages (mysql-community-server and mysql-python) via yum, then ensure mysql is started
+# if not, start it and enable it at start
+  - name: Install MySQL 5.7 repo
+    yum: name=http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm state=present
+
+  - name: Install MySQL 5.7
+    yum: pkg={{ item }}
+    with_items:
+      - mysql-community-server
+      - MySQL-python
+
+  - name: Start the MySQL service
+    service: name=mysqld state=started enabled=true
